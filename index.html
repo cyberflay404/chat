@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FORUM CHAT JAX7</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+background:
+radial-gradient(circle at top left,#00ff8840,transparent 25%),
+radial-gradient(circle at bottom right,#00bfff40,transparent 25%),
+#050505;
+height:100vh;
+overflow:hidden;
+display:flex;
+justify-content:center;
+align-items:center;
+color:white;
+}
+
+.container{
+width:100%;
+max-width:520px;
+height:95vh;
+background:rgba(10,10,10,0.92);
+backdrop-filter:blur(18px);
+border:1px solid rgba(255,255,255,0.08);
+border-radius:28px;
+overflow:hidden;
+display:flex;
+flex-direction:column;
+box-shadow:0 0 40px rgba(0,255,136,0.15);
+}
+
+/* LOGIN */
+
+.login{
+flex:1;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+padding:30px;
+gap:18px;
+animation:fade 1s ease;
+}
+
+.logo{
+font-size:45px;
+font-weight:700;
+color:#00ff88;
+text-shadow:0 0 25px #00ff88;
+}
+
+.sub{
+font-size:13px;
+color:#999;
+text-align:center;
+}
+
+.login input{
+width:100%;
+padding:16px;
+border:none;
+outline:none;
+border-radius:18px;
+background:#111;
+color:white;
+border:1px solid #222;
+font-size:15px;
+}
+
+.login input:focus{
+border:1px solid #00ff88;
+box-shadow:0 0 20px rgba(0,255,136,0.3);
+}
+
+.login button{
+width:100%;
+padding:16px;
+border:none;
+border-radius:18px;
+background:linear-gradient(135deg,#00ff88,#00bfff);
+font-weight:700;
+font-size:15px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.login button:hover{
+transform:scale(1.03);
+}
+
+/* CHAT */
+
+.chat{
+display:none;
+flex-direction:column;
+height:100%;
+}
+
+.topbar{
+padding:16px;
+background:#0c0c0c;
+border-bottom:1px solid #1f1f1f;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.room{
+font-size:17px;
+font-weight:600;
+}
+
+.online{
+font-size:12px;
+color:#00ff88;
+margin-top:3px;
+}
+
+.userBox{
+background:#111;
+padding:8px 14px;
+border-radius:14px;
+font-size:12px;
+color:#00ff88;
+border:1px solid #222;
+}
+
+/* MESSAGES */
+
+.messages{
+flex:1;
+overflow-y:auto;
+padding:15px;
+display:flex;
+flex-direction:column;
+gap:12px;
+scroll-behavior:smooth;
+}
+
+.messages::-webkit-scrollbar{
+width:5px;
+}
+
+.messages::-webkit-scrollbar-thumb{
+background:#00ff88;
+border-radius:20px;
+}
+
+.msg{
+max-width:82%;
+padding:12px;
+border-radius:18px;
+background:#111;
+border:1px solid #222;
+animation:fade 0.3s ease;
+word-wrap:break-word;
+}
+
+.mine{
+align-self:flex-end;
+background:linear-gradient(135deg,#00ff88,#00bfff);
+color:black;
+}
+
+.name{
+font-size:12px;
+font-weight:600;
+margin-bottom:6px;
+opacity:0.8;
+}
+
+.msg img{
+width:100%;
+border-radius:14px;
+margin-top:8px;
+}
+
+.time{
+font-size:10px;
+margin-top:6px;
+opacity:0.6;
+text-align:right;
+}
+
+.system{
+text-align:center;
+font-size:12px;
+color:#777;
+margin:5px 0;
+}
+
+/* INPUT */
+
+.inputArea{
+padding:15px;
+background:#0c0c0c;
+border-top:1px solid #1f1f1f;
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.textInput{
+flex:1;
+padding:15px;
+border:none;
+outline:none;
+border-radius:18px;
+background:#111;
+color:white;
+font-size:14px;
+}
+
+.sendBtn,
+.uploadBtn{
+width:52px;
+height:52px;
+border:none;
+border-radius:16px;
+cursor:pointer;
+font-size:20px;
+}
+
+.sendBtn{
+background:linear-gradient(135deg,#00ff88,#00bfff);
+}
+
+.uploadBtn{
+background:#111;
+color:white;
+}
+
+.fileInput{
+display:none;
+}
+
+/* ANIMATION */
+
+@keyframes fade{
+from{
+opacity:0;
+transform:translateY(20px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- LOGIN -->
+
+<div class="login" id="loginPage">
+
+<div class="logo">
+JAX7
+</div>
+
+<div class="sub">
+FORUM CHAT ANONYMOUS REALTIME
+</div>
+
+<input type="text" id="username" placeholder="Masukkan nama anonymous">
+
+<button onclick="joinChat()">
+ENTER FORUM
+</button>
+
+</div>
+
+<!-- CHAT -->
+
+<div class="chat" id="chatPage">
+
+<div class="topbar">
+
+<div>
+<div class="room">
+FORUM CHAT JAX7
+</div>
+
+<div class="online" id="onlineCount">
+Connecting...
+</div>
+</div>
+
+<div class="userBox" id="myName">
+Anonymous
+</div>
+
+</div>
+
+<div class="messages" id="messages"></div>
+
+<div class="inputArea">
+
+<label class="uploadBtn">
++
+<input type="file" id="imageInput" class="fileInput" accept="image/*">
+</label>
+
+<input type="text" id="messageInput" class="textInput" placeholder="Ketik pesan...">
+
+<button class="sendBtn" onclick="sendMessage()">
+➤
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+getDatabase,
+ref,
+push,
+onChildAdded,
+set,
+remove,
+onValue
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+/* =========================
+   FIREBASE CONFIG
+========================= */
+
+const firebaseConfig = {
+
+apiKey: "PASTE_API_KEY",
+authDomain: "PASTE_AUTH_DOMAIN",
+databaseURL: "PASTE_DATABASE_URL",
+projectId: "PASTE_PROJECT_ID",
+storageBucket: "PASTE_STORAGE_BUCKET",
+messagingSenderId: "PASTE_SENDER_ID",
+appId: "PASTE_APP_ID"
+
+};
+
+/* ========================= */
+
+const app = initializeApp(firebaseConfig);
+
+const db = getDatabase(app);
+
+const msgRef = ref(db,"jax7_messages");
+
+const onlineRef = ref(db,"jax7_online");
+
+let username = "";
+let userId = "user_" + Math.random().toString(36).substr(2,9);
+
+/* JOIN */
+
+window.joinChat = function(){
+
+const input =
+document.getElementById("username");
+
+if(input.value.trim() === ""){
+alert("Masukkan nama");
+return;
+}
+
+username = input.value;
+
+document.getElementById("myName")
+.innerText = username;
+
+document.getElementById("loginPage")
+.style.display = "none";
+
+document.getElementById("chatPage")
+.style.display = "flex";
+
+set(ref(db,"jax7_online/" + userId),{
+name: username
+});
+
+window.addEventListener("beforeunload",()=>{
+remove(ref(db,"jax7_online/" + userId));
+});
+
+addSystemMessage(username + " joined");
+
+};
+
+/* SEND MESSAGE */
+
+window.sendMessage = function(){
+
+const messageInput =
+document.getElementById("messageInput");
+
+const imageInput =
+document.getElementById("imageInput");
+
+const text = messageInput.value.trim();
+
+const file = imageInput.files[0];
+
+if(text === "" && !file) return;
+
+const time =
+new Date().toLocaleTimeString([],{
+hour:'2-digit',
+minute:'2-digit'
+});
+
+if(file){
+
+const reader = new FileReader();
+
+reader.onload = function(e){
+
+push(msgRef,{
+name: username,
+text: text,
+image: e.target.result,
+time: time,
+uid: userId
+});
+
+};
+
+reader.readAsDataURL(file);
+
+}else{
+
+push(msgRef,{
+name: username,
+text: text,
+image: "",
+time: time,
+uid: userId
+});
+
+}
+
+messageInput.value = "";
+imageInput.value = "";
+
+};
+
+/* RECEIVE MESSAGE */
+
+onChildAdded(msgRef,(data)=>{
+
+const msg = data.val();
+
+const div =
+document.createElement("div");
+
+div.classList.add("msg");
+
+if(msg.uid === userId){
+div.classList.add("mine");
+}
+
+let html =
+`
+<div class="name">${msg.name}</div>
+`;
+
+if(msg.text){
+html += `<div>${msg.text}</div>`;
+}
+
+if(msg.image){
+html += `<img src="${msg.image}">`;
+}
+
+html += `
+<div class="time">${msg.time}</div>
+`;
+
+div.innerHTML = html;
+
+document.getElementById("messages")
+.appendChild(div);
+
+scrollBottom();
+
+playSound();
+
+});
+
+/* ONLINE COUNT */
+
+onValue(onlineRef,(snapshot)=>{
+
+const data = snapshot.val();
+
+const count =
+data ? Object.keys(data).length : 0;
+
+document.getElementById("onlineCount")
+.innerText = count + " Online";
+
+});
+
+/* SYSTEM MESSAGE */
+
+function addSystemMessage(text){
+
+const div =
+document.createElement("div");
+
+div.classList.add("system");
+
+div.innerText = text;
+
+document.getElementById("messages")
+.appendChild(div);
+
+}
+
+/* SCROLL */
+
+function scrollBottom(){
+
+const messages =
+document.getElementById("messages");
+
+messages.scrollTop =
+messages.scrollHeight;
+
+}
+
+/* ENTER SEND */
+
+document
+.getElementById("messageInput")
+.addEventListener("keypress",(e)=>{
+
+if(e.key === "Enter"){
+sendMessage();
+}
+
+});
+
+/* NOTIFICATION SOUND */
+
+function playSound(){
+
+const audio =
+new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=message-pop-alert-2354.mp3");
+
+audio.volume = 0.2;
+
+audio.play();
+
+}
+
+</script>
+
+</body>
+</html>
